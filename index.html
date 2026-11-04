@@ -56,10 +56,10 @@
                 margin: 0 !important;
                 opacity: 1 !important;
                 color: #000 !important;
-                font-family: monospace, 'Courier New', sans-serif !important;
-                font-size: 13px !important;
-                font-weight: 900 !important;
-                line-height: 1.3 !important;
+                font-family: 'Courier New', Courier, monospace !important;
+                font-size: 12px !important;
+                font-weight: normal !important;
+                line-height: 1.5 !important;
                 box-sizing: border-box !important;
             }
             @page {
@@ -245,10 +245,8 @@
 
     <!-- JAVASCRIPT LOGIC -->
     <script>
-        // Global State Variables
         let currentCart = [];
 
-        // Prevent accidental page refresh / navigation / gestures
         window.addEventListener('beforeunload', function (e) {
             if (currentCart.length > 0) {
                 e.preventDefault();
@@ -256,7 +254,6 @@
             }
         });
 
-        // Block shortcut keys for refresh (F5, Ctrl+R, Cmd+R)
         window.addEventListener('keydown', function (e) {
             if (
                 e.key === 'F5' ||
@@ -267,19 +264,16 @@
             }
         });
 
-        // Disable pull-to-refresh on mobile / touch devices
         document.addEventListener('touchstart', function(e) {
             if (e.touches.length > 1) {
                 e.preventDefault();
             }
         }, { passive: false });
 
-        // Load data on window load
         window.onload = function() {
             renderCart();
         };
 
-        // Handle Custom Item Addition by Serveur
         function handleCustomAdd(e) {
             e.preventDefault();
             const nameInput = document.getElementById('item-name-input');
@@ -294,14 +288,12 @@
 
             addItemToCart(name, price, qty);
 
-            // Reset form inputs
             nameInput.value = '';
             priceInput.value = '';
             qtyInput.value = '1';
             nameInput.focus();
         }
 
-        // Add item object to cart array
         function addItemToCart(name, price, qty) {
             const existingIndex = currentCart.findIndex(item => item.name.toLowerCase() === name.toLowerCase());
             if (existingIndex > -1) {
@@ -312,7 +304,6 @@
             renderCart();
         }
 
-        // Update item quantity
         function updateQty(id, delta) {
             const index = currentCart.findIndex(item => item.id === id);
             if (index > -1) {
@@ -324,14 +315,12 @@
             renderCart();
         }
 
-        // Clear all items from cart
         function clearCart() {
             if (currentCart.length === 0) return;
             currentCart = [];
             renderCart();
         }
 
-        // Calculate and Render Cart UI
         function renderCart() {
             const container = document.getElementById('cart-items-container');
             const badge = document.getElementById('cart-counter-badge');
@@ -380,8 +369,7 @@
             document.getElementById('total-val').innerText = `${grandTotal.toFixed(2)} HTG`;
         }
 
-        // Generate thermal 58mm HTML string format
-function generateReceiptHTML() {
+        function generateReceiptHTML() {
             const serverName = document.getElementById('server-name').value.trim() || 'Serveur';
             const orderTarget = document.getElementById('order-target').value.trim() || 'Table';
 
@@ -393,8 +381,8 @@ function generateReceiptHTML() {
                 grandTotal += total;
                 itemsRows += `
                     <tr>
-                        <td style="padding:3px 0; font-weight:normal; word-break:break-word; font-size:12px; color:#000;">${item.qty}x ${item.name}</td>
-                        <td style="text-align:right; padding:3px 0; font-weight:normal; font-size:12px; color:#000; vertical-align:top;">${total.toFixed(0)}</td>
+                        <td style="padding:4px 0; font-size:12px; color:#000; word-break:break-word;">${item.qty}x ${item.name}</td>
+                        <td style="text-align:right; padding:4px 0; font-size:12px; color:#000; vertical-align:top;">${total.toFixed(0)}</td>
                     </tr>
                 `;
             });
@@ -404,25 +392,22 @@ function generateReceiptHTML() {
             const timeStr = now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
 
             return `
-                <div style="text-align:center; font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#000; width:100%; box-sizing:border-box; -webkit-print-color-adjust: exact;">
-                    <!-- ENTETE BOLD -->
-                    <h2 style="font-size:18px; font-weight:900; margin:0 0 2px 0; text-transform:uppercase; letter-spacing: 0.5px;">RESTAURANT</h2>
-                    <p style="margin:0; font-size:11px; font-weight:normal; text-transform:uppercase;">ADDITION CLIENT</p>
-                    <p style="margin:3px 0; font-size:12px; font-weight:normal;">-----------------------------------------------</p>
+                <div style="text-align:center; font-family:'Courier New', Courier, monospace; font-size:12px; color:#000; width:100%; box-sizing:border-box; -webkit-print-color-adjust: exact;">
+                    <h2 style="font-size:16px; font-weight:bold; margin:0 0 2px 0; text-transform:uppercase;">RESTAURANT</h2>
+                    <p style="margin:0; font-size:11px; text-transform:uppercase;">ADDITION CLIENT</p>
+                    <p style="margin:4px 0; font-size:11px;">--------------------------------</p>
 
-                    <!-- DETAILS STANDARD -->
-                    <div style="text-align:left; font-size:12px; font-weight:normal; margin-bottom:4px; line-height:1.3; color:#000;">
+                    <div style="text-align:left; font-size:11px; margin-bottom:4px; line-height:1.4; color:#000;">
                         <div>Date: ${dateStr} ${timeStr}</div>
                         <div>Lieu: ${orderTarget}</div>
                         <div>Serveur: ${serverName}</div>
                     </div>
 
-                    <p style="margin:3px 0; font-size:12px; font-weight:normal;">-----------------------------------------------</p>
+                    <p style="margin:4px 0; font-size:11px;">--------------------------------</p>
 
-                    <!-- ARTICLES STANDARD -->
                     <table style="width:100%; border-collapse:collapse; text-align:left;">
                         <thead>
-                            <tr style="border-bottom: 2px solid #000; font-size:12px; font-weight:bold;">
+                            <tr style="border-bottom: 1px dashed #000; font-size:11px;">
                                 <th style="padding-bottom:4px; text-align:left;">ARTICLE</th>
                                 <th style="text-align:right; padding-bottom:4px;">HTG</th>
                             </tr>
@@ -432,22 +417,20 @@ function generateReceiptHTML() {
                         </tbody>
                     </table>
 
-                    <p style="margin:3px 0; font-size:12px; font-weight:normal;">-----------------------------------------------</p>
+                    <p style="margin:4px 0; font-size:11px;">--------------------------------</p>
 
-                    <!-- TOTAL BOLD -->
                     <div style="text-align:right; line-height:1.4;">
-                        <div style="font-size:14px; font-weight:900; margin-top:2px;">TOTAL: ${grandTotal.toFixed(2)} HTG</div>
+                        <div style="font-size:13px; font-weight:bold; margin-top:2px;">TOTAL: ${grandTotal.toFixed(2)} HTG</div>
                     </div>
 
-                    <p style="margin:3px 0; font-size:12px; font-weight:normal;">-----------------------------------------------</p>
-                    <p style="margin:6px 0 0 0; font-weight:bold; font-size:13px;">Merci pour votre visite !</p>
-                    <p style="margin:2px 0 6px 0; font-size:12px; font-weight:normal;">Bon Appétit !</p>
+                    <p style="margin:4px 0; font-size:11px;">--------------------------------</p>
+                    <p style="margin:6px 0 0 0; font-weight:bold; font-size:12px;">Merci pour votre visite !</p>
+                    <p style="margin:2px 0 6px 0; font-size:11px;">Bon Appétit !</p>
                     <br/><br/>
                 </div>
             `;
         }
 
-        // Open Receipt Modal
         function openReceiptModal() {
             if (currentCart.length === 0) return;
             const content = generateReceiptHTML();
@@ -455,12 +438,10 @@ function generateReceiptHTML() {
             document.getElementById('receipt-modal').classList.remove('hidden');
         }
 
-        // Close Receipt Modal
         function closeReceiptModal() {
             document.getElementById('receipt-modal').classList.add('hidden');
         }
 
-        // ================= HISTORIQUE MANAGEMENT =================
         function getHistory() {
             try {
                 return JSON.parse(localStorage.getItem('pos_receipt_history')) || [];
@@ -481,7 +462,7 @@ function generateReceiptHTML() {
                 items: [...cartItems],
                 total: totalAmount
             };
-            history.unshift(newRecord); // add newest first
+            history.unshift(newRecord);
             localStorage.setItem('pos_receipt_history', JSON.stringify(history));
         }
 
@@ -499,7 +480,7 @@ function generateReceiptHTML() {
             renderHistory();
         }
 
-function renderHistory() {
+        function renderHistory() {
             const container = document.getElementById('history-items-container');
             const history = getHistory();
 
@@ -556,78 +537,75 @@ function renderHistory() {
         }
         
         function buildHistoryPrintHTML(record) {
-                    const itemList = record.items || record.cart || [];
-                    const itemsRows = itemList.map(item => `
-                        <tr>
-                            <td style="padding:3px 0; font-weight:normal; word-break:break-word; font-size:12px; color:#000;">${item.qty}x ${item.name}</td>
-                            <td style="text-align:right; padding:3px 0; font-weight:normal; font-size:12px; color:#000; vertical-align:top;">${(item.price * item.qty).toFixed(0)}</td>
-                        </tr>
-                    `).join('');
+            const itemList = record.items || record.cart || [];
+            const itemsRows = itemList.map(item => `
+                <tr>
+                    <td style="padding:4px 0; font-size:12px; color:#000; word-break:break-word;">${item.qty}x ${item.name}</td>
+                    <td style="text-align:right; padding:4px 0; font-size:12px; color:#000; vertical-align:top;">${(item.price * item.qty).toFixed(0)}</td>
+                </tr>
+            `).join('');
 
-                    return `
-                        <div style="text-align:center; font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#000; width:100%; box-sizing:border-box; -webkit-print-color-adjust: exact;">
-                            <h2 style="font-size:18px; font-weight:900; margin:0 0 2px 0; text-transform:uppercase; letter-spacing: 0.5px;">RESTAURANT</h2>
-                            <p style="margin:0; font-size:11px; font-weight:normal; text-transform:uppercase;">ADDITION CLIENT</p>
-                            <p style="margin:0; font-size:8px; font-weight:normal; text-transform:uppercase;">REIMPRESSION</p>
-                            <p style="margin:3px 0; font-size:12px; font-weight:normal;">-----------------------------------------------</p>
+            return `
+                <div style="text-align:center; font-family:'Courier New', Courier, monospace; font-size:12px; color:#000; width:100%; box-sizing:border-box; -webkit-print-color-adjust: exact;">
+                    <h2 style="font-size:16px; font-weight:bold; margin:0 0 2px 0; text-transform:uppercase;">RESTAURANT</h2>
+                    <p style="margin:0; font-size:11px; text-transform:uppercase;">ADDITION CLIENT</p>
+                    <p style="margin:0; font-size:9px; text-transform:uppercase;">REIMPRESSION</p>
+                    <p style="margin:4px 0; font-size:11px;">--------------------------------</p>
 
-                            <div style="text-align:left; font-size:12px; font-weight:normal; margin-bottom:4px; line-height:1.3; color:#000;">
-                                <div>Date: ${record.date} ${record.time}</div>
-                                <div>Lieu: ${record.target}</div>
-                                <div>Serveur: ${record.server}</div>
-                            </div>
+                    <div style="text-align:left; font-size:11px; margin-bottom:4px; line-height:1.4; color:#000;">
+                        <div>Date: ${record.date} ${record.time}</div>
+                        <div>Lieu: ${record.target}</div>
+                        <div>Serveur: ${record.server}</div>
+                    </div>
 
-                            <p style="margin:3px 0; font-size:12px; font-weight:normal;">-----------------------------------------------</p>
+                    <p style="margin:4px 0; font-size:11px;">--------------------------------</p>
 
-                            <table style="width:100%; border-collapse:collapse; text-align:left;">
-                                <thead>
-                                    <tr style="border-bottom: 2px solid #000; font-size:12px; font-weight:bold;">
-                                        <th style="padding-bottom:4px; text-align:left;">ARTICLE</th>
-                                        <th style="text-align:right; padding-bottom:4px;">HTG</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    ${itemsRows}
-                                </tbody>
-                            </table>
+                    <table style="width:100%; border-collapse:collapse; text-align:left;">
+                        <thead>
+                            <tr style="border-bottom: 1px dashed #000; font-size:11px;">
+                                <th style="padding-bottom:4px; text-align:left;">ARTICLE</th>
+                                <th style="text-align:right; padding-bottom:4px;">HTG</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${itemsRows}
+                        </tbody>
+                    </table>
 
-                            <p style="margin:3px 0; font-size:12px; font-weight:normal;">-----------------------------------------------</p>
+                    <p style="margin:4px 0; font-size:11px;">--------------------------------</p>
 
-                            <div style="text-align:right; line-height:1.4;">
-                                <div style="font-size:14px; font-weight:900; margin-top:2px;">TOTAL: ${record.total.toFixed(2)} HTG</div>
-                            </div>
+                    <div style="text-align:right; line-height:1.4;">
+                        <div style="font-size:13px; font-weight:bold; margin-top:2px;">TOTAL: ${record.total.toFixed(2)} HTG</div>
+                    </div>
 
-                            <p style="margin:3px 0; font-size:12px; font-weight:normal;">-----------------------------------------------</p>
-                            <p style="margin:6px 0 0 0; font-weight:bold; font-size:13px;">Merci pour votre visite !</p>
-                            <p style="margin:2px 0 6px 0; font-size:12px; font-weight:normal;">Bon Appétit !</p>
-                            <br/><br/>
-                        </div>
-                    `;
-                }        
+                    <p style="margin:4px 0; font-size:11px;">--------------------------------</p>
+                    <p style="margin:6px 0 0 0; font-weight:bold; font-size:12px;">Merci pour votre visite !</p>
+                    <p style="margin:2px 0 6px 0; font-size:11px;">Bon Appétit !</p>
+                    <br/><br/>
+                </div>
+            `;
+        }
+
+        function triggerThermalPrint() {
+            if (currentCart.length === 0) return;
             
-        // Execute Thermal Print Action for 58mm Printer
-    function triggerThermalPrint() {
-                if (currentCart.length === 0) return;
-                
-                const serverName = document.getElementById('server-name').value.trim() || 'Serveur';
-                const orderTarget = document.getElementById('order-target').value.trim() || 'Table';
-                const grandTotal = currentCart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+            const serverName = document.getElementById('server-name').value.trim() || 'Serveur';
+            const orderTarget = document.getElementById('order-target').value.trim() || 'Table';
+            const grandTotal = currentCart.reduce((sum, item) => sum + (item.price * item.qty), 0);
 
-                // Save automatically to history list
-                saveToHistory(serverName, orderTarget, currentCart, grandTotal);
+            saveToHistory(serverName, orderTarget, currentCart, grandTotal);
 
-                const printArea = document.getElementById('receipt-print-area');
-                const receiptContent = generateReceiptHTML();
-                
-                printArea.innerHTML = receiptContent;
-                
-                setTimeout(() => {
-                    window.print();
-                    closeReceiptModal();
-                    clearCart(); // Vide panyen an otomatikman apre enpresyon an
-                }, 200);
-            }
-    
+            const printArea = document.getElementById('receipt-print-area');
+            const receiptContent = generateReceiptHTML();
+            
+            printArea.innerHTML = receiptContent;
+            
+            setTimeout(() => {
+                window.print();
+                closeReceiptModal();
+                clearCart();
+            }, 200);
+        }
     </script>
 </body>
 </html>
